@@ -22,7 +22,7 @@ public class Porducer implements Runnable {
             try {
                 resource.setNumber(i);
             } catch (InterruptedException e) {
-                IO.println("Writer interrupted -");
+                IO.println(Thread.currentThread().getName() + " interrupted");
                 Thread.currentThread().interrupt();
             }
         }

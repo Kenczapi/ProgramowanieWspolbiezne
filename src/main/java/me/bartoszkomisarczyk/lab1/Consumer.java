@@ -15,7 +15,7 @@ public class Consumer implements Runnable {
             try {
                 this.sum += resource.getNumber();
             } catch (InterruptedException e) {
-                IO.println("Reader interrupted -");
+                IO.println(Thread.currentThread().getName() + " interrupted");
                 Thread.currentThread().interrupt();
             }
         }
