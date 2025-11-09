@@ -1,10 +1,10 @@
 package me.bartoszkomisarczyk.lab1;
 
-public class Reader implements Runnable {
+public class Consumer implements Runnable {
     private Long sum;
     private final SharedResource resource;
 
-    public Reader(SharedResource res) {
+    public Consumer(SharedResource res) {
         this.sum = 0L;
         this.resource = res;
     }
@@ -12,20 +12,13 @@ public class Reader implements Runnable {
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-            //IO.println("Reader reading...");
             try {
-                //IO.println(Thread.currentThread().getName() + " just got value!");
                 this.sum += resource.getNumber();
             } catch (InterruptedException e) {
                 IO.println("Reader interrupted -");
                 Thread.currentThread().interrupt();
-            } finally {
-                IO.println("Final sum: " + this.sum);
             }
         }
-    }
-
-    public Long getSum() {
-        return this.sum;
+        IO.println("Final sum: " + this.sum);
     }
 }

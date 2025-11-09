@@ -18,4 +18,8 @@ public class SharedResource {
         notifyAll();
         return temp;
     }
+
+    public synchronized Integer peekNumber(){
+        return this.number;
+    }
 }

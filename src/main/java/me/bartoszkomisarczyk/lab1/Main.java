@@ -4,17 +4,17 @@ public class Main {
     static void main(String... args) throws InterruptedException {
 
         SharedResource resource = new SharedResource();
-        Writer w1 = new Writer(resource, 21, 37);
-        Writer w2 = new Writer(resource, 1337, 4200);
-        Reader r = new Reader(resource);
+        Porducer w1 = new Porducer(resource, 21, 37);
+        Porducer w2 = new Porducer(resource, 1337, 4200);
+        Consumer r = new Consumer(resource);
 
         Thread[] workers = new Thread[]{
-                new Thread(w1, "122448_Writer_1"),
-                new Thread(w2, "122448_Writer_2"),
-                new Thread(r, "122448_Reader_1"),
+                new Thread(w1, "122448_Producer_1"),
+                new Thread(w2, "122448_Producer_2"),
+                new Thread(r, "122448_Consumer_1"),
         };
 
-        Thread stats = new Thread(() -> {
+        Thread monitoring = new Thread(() -> {
             while (!Thread.currentThread().isInterrupted()) {
                 for (Thread t : workers) {
                     IO.print("-- " + t.getName() + " --");
@@ -22,26 +22,25 @@ public class Main {
                     IO.print(" | is interrupted: " + t.isInterrupted() + " }");
                     IO.println();
                 }
+                IO.println("-- Shared resource value: " + resource.peekNumber());
                 IO.println("======================");
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(1_000);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
             }
-        }, "122448_WorkerInfo_1");
-        stats.setDaemon(true);
+        }, "122448_Monitoring_1");
+        monitoring.setDaemon(true);
 
         for (Thread t : workers) {
             t.start();
         }
 
-        stats.start();
-        Thread.sleep(1_000);
+        monitoring.start();
+        Thread.sleep(30_000);
         for (Thread t : workers) {
             t.interrupt();
         }
-        Thread.sleep(50);
-
     }
 }
